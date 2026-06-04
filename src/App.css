@@ -1,18 +1,18 @@
 :root {
-  --card: #8a6d6d;
+  --card: #d3b9b9;
   --primary: #ffffff;
-  --secondary: #230101;
+  --secondary: #927474;
   --text: #382020;
-  --muted: #0d0101;
+  --muted: #300303;
   --border: rgba(24, 0, 0, 0.08);
 }
 
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: var(--bg);
+  /* background: var(--bg); */
   color: var(--text);
-  --bg: #000000;
+  --bg: #7c5e5e;
 }
 
 /* container */
@@ -66,7 +66,7 @@ h1 {
   display: flex;
   flex: 1;
   align-items: center;
-  background: #4e4848;
+  background: #f0cbcb;
   border-radius: 12px;
   padding: 6px 10px;
 }
