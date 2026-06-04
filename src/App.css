@@ -1,18 +1,20 @@
 :root {
-  --card: #8a6d6d;
-  --primary: #ffffff;
-  --secondary: #230101;
-  --text: #382020;
-  --muted: #0d0101;
-  --border: rgba(24, 0, 0, 0.08);
+  --card: #ffffff;
+  --primary: #6b2d2d;
+  --secondary: #f5efe7;
+  --text: #23181a;
+  --muted: #64535a;
+  --border: rgba(35, 24, 26, 0.1);
+  --surface: #f7f2ee;
 }
 
 body {
   margin: 0;
   font-family: "Poppins", sans-serif;
-  background: var(--bg);
+  background:
+    radial-gradient(circle at top, #f6eee5 0%, #efe5de 42%, #e7dbd5 100%);
   color: var(--text);
-  --bg: #000000;
+  min-height: 100vh;
 }
 
 /* container */
@@ -25,7 +27,7 @@ body {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 18px;
-  box-shadow: 0 10px 25px rgba(46, 1, 1, 0.05);
+  box-shadow: 0 12px 30px rgba(62, 31, 31, 0.08);
 }
 
 /* title */
@@ -46,8 +48,8 @@ h1 {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: rgb(0, 0, 0);
+  background: linear-gradient(135deg, var(--primary), #9b5656);
+  color: #fff;
 }
 
 /* SEARCH PANEL */
@@ -56,9 +58,10 @@ h1 {
   gap: 12px;
   align-items: center;
   padding: 14px;
-  background: rgb(167, 147, 147);
+  background: rgba(255, 255, 255, 0.88);
   border-radius: 16px;
   border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
 }
 
 /* input group remove bootstrap feel */
@@ -66,9 +69,10 @@ h1 {
   display: flex;
   flex: 1;
   align-items: center;
-  background: #f3eaea;
+  background: var(--surface);
   border-radius: 12px;
   padding: 6px 10px;
+  border: 1px solid var(--border);
 }
 
 /* input */
@@ -79,20 +83,34 @@ h1 {
   color: var(--text) !important;
 }
 
+.search-input {
+  color: var(--text) !important;
+  caret-color: var(--primary);
+}
+
+.search-input:focus {
+  color: var(--text) !important;
+  box-shadow: none;
+}
+
+.form-control::placeholder {
+  color: #8a7880;
+}
+
 /* select (region) */
 .form-select {
   width: 180px;
   border-radius: 12px;
   border: 1px solid var(--border);
-  background: rgb(243, 242, 242);
+  background: #fff;
   color: var(--text);
   font-weight: 500;
 }
 
 /* button */
 .btn-soft {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: rgb(189, 158, 158);
+  background: linear-gradient(135deg, var(--primary), #944f4f);
+  color: #fff;
   border: none;
   border-radius: 10px;
   padding: 6px 10px;
@@ -108,8 +126,8 @@ h1 {
   border: none;
   border-radius: 18px;
   overflow: hidden;
-  background: white;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+  background: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   transition: 0.3s;
 }
 
@@ -121,11 +139,28 @@ h1 {
 .card img {
   height: 180px;
   object-fit: cover;
+  display: block;
+  width: 100%;
+}
+
+.country-flag-placeholder {
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f1e8e1, #dccfc6);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.country-flag {
+  background: #f3ece5;
 }
 
 /* text */
 .card-body h5 {
   font-weight: 700;
+  color: var(--text);
 }
 
 .card-body p {

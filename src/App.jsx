@@ -4,6 +4,64 @@ import SearchBar from "./components/SearchBar";
 import "./App.css";
 import CountryList from "./components/CountryList";
 
+async function requestCountries({
+  search,
+  region,
+  signal,
+  setCountries,
+  setLoading,
+  setError,
+}) {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const normalizedSearch = search.trim();
+    const baseFields = "name,flags,region,population,cca3";
+
+    let url = `https://restcountries.com/v3.1/all?fields=${baseFields}`;
+
+    if (region !== "all") {
+      url = `https://restcountries.com/v3.1/region/${region}?fields=${baseFields}`;
+    } else if (normalizedSearch.length >= 2) {
+      url = `https://restcountries.com/v3.1/name/${encodeURIComponent(normalizedSearch)}?fields=${baseFields}`;
+    }
+
+    const res = await fetch(url, { signal });
+
+    if (res.status === 404) {
+      setCountries([]);
+      return;
+    }
+
+    if (!res.ok) {
+      throw new Error("Failed to fetch countries");
+    }
+
+    const data = await res.json();
+
+    const filteredCountries =
+      region !== "all" && normalizedSearch.length >= 2
+        ? data.filter((country) =>
+            country.name?.common
+              ?.toLowerCase()
+              .includes(normalizedSearch.toLowerCase()),
+          )
+        : data;
+
+    setCountries(filteredCountries);
+  } catch (err) {
+    if (err.name !== "AbortError") {
+      setError(err.message || "Something went wrong");
+      setCountries([]);
+    }
+  } finally {
+    if (!signal?.aborted) {
+      setLoading(false);
+    }
+  }
+}
+
 export default function App() {
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,38 +70,22 @@ export default function App() {
   const [region, setRegion] = useState("all");
 
   useEffect(() => {
-    async function fetchCountries() {
-      try {
-        setLoading(true);
-        setError(null);
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(() => {
+      requestCountries({
+        search,
+        region,
+        signal: controller.signal,
+        setCountries,
+        setLoading,
+        setError,
+      });
+    }, 0);
 
-        let url =
-          "https://restcountries.com/v3.1/all?fields=name,flags,region,population";
-
-        if (search.length >= 2) {
-          url = `https://restcountries.com/v3.1/name/${search}`;
-        } else if (region !== "all") {
-          url = `https://restcountries.com/v3.1/region/${region}`;
-        }
-
-        const res = await fetch(url);
-
-        if (!res.ok) {
-          throw new Error("Failed to fetch countries");
-        }
-
-        const data = await res.json();
-
-        setCountries(data);
-      } catch (err) {
-        setError(err.message);
-        setCountries([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchCountries();
+    return () => {
+      window.clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [search, region]);
 
   return (
@@ -75,7 +117,15 @@ export default function App() {
             Error: {error}
             <button
               className="btn btn-danger ms-2"
-              onClick={() => window.location.reload()}
+              onClick={() =>
+                requestCountries({
+                  search,
+                  region,
+                  setCountries,
+                  setLoading,
+                  setError,
+                })
+              }
             >
               Retry
             </button>
